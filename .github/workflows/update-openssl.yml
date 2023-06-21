@@ -19,7 +19,7 @@ jobs:
         cd openssl
         currenttag=$(git describe --tags)
         echo "Current version: $currenttag"
-        latesttag=$(git tag | grep ^openssl-[0-9]\d*\.[0-9]\d*\.[0-9]\d*$ | tail -n1)
+        latesttag=$(git tag | grep -E '^openssl-[0-9]\d*\.[0-9]\d*\.[0-9]\d*$' | tail -n1)
         echo "Latest version: $latesttag"
         if [[ "$currenttag" != "$latesttag" ]]; then
           echo "Updating repo..."
