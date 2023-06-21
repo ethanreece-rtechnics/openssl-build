@@ -4,7 +4,7 @@ on:
     branches: [ "main" ]
   workflow_dispatch:
 jobs:
-  build32:
+  build-windows-i686:
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -29,9 +29,9 @@ jobs:
     - name: upload build
       uses: actions/upload-artifact@v3
       with:
-        name: build32
+        name: build-windows-i686
         path: openssl/build
-  build64:
+  build-windows-x86_64:
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -56,12 +56,12 @@ jobs:
     - name: upload build
       uses: actions/upload-artifact@v3
       with:
-        name: build64
+        name: build-windows-x86_64
         path: openssl/build
-  release:
+  package:
     permissions:
       contents: write
-    needs: [build32, build64]
+    needs: [build-windows-i686, build-windows-x86_64]
     runs-on: ubuntu-latest
     steps:
     - name: Download all workflow run artifacts
@@ -71,16 +71,16 @@ jobs:
       uses: "WyriHaximus/github-action-get-previous-tag@v1"
     - name: zip artifacts
       run: |
-        zip -r ${{ steps.previoustag.outputs.tag }}-win32-dev.zip build32
-        zip -r ${{ steps.previoustag.outputs.tag }}-win64-dev.zip build64
-        zip -r -j ${{ steps.previoustag.outputs.tag }}-win32.zip build32/bin
-        zip -r -j ${{ steps.previoustag.outputs.tag }}-win64.zip build64/bin
+        zip -r ${{ steps.previoustag.outputs.tag }}-windows-i686-lib.zip build-windows-i686
+        zip -r ${{ steps.previoustag.outputs.tag }}-windows-x86_64-lib.zip build-windows-x86_64
+        zip -r -j ${{ steps.previoustag.outputs.tag }}-windows-i686.zip build-windows-i686/bin
+        zip -r -j ${{ steps.previoustag.outputs.tag }}-windows-x86_64.zip build-windows-x86_64/bin
     - name: Release
       uses: softprops/action-gh-release@v1
       with:
         tag_name: ${{ steps.previoustag.outputs.tag }}
         files: |
-          openssl-win32-dev.zip
-          openssl-win64-dev.zip
-          openssl-win32.zip
-          openssl-win64.zip
+          ${{ steps.previoustag.outputs.tag }}-windows-i686-lib.zip
+          ${{ steps.previoustag.outputs.tag }}-windows-x86_64-lib.zip
+          ${{ steps.previoustag.outputs.tag }}-windows-i686.zip
+          ${{ steps.previoustag.outputs.tag }}-windows-x86_64.zip
