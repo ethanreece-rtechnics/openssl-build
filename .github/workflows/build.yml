@@ -39,6 +39,8 @@ jobs:
         working-directory: ./openssl
     steps:
     - uses: actions/checkout@v3
+      with:
+        submodules: true
     - name: install dependencies
       run: |
         sudo apt update
