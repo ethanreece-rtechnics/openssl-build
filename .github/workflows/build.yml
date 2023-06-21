@@ -65,10 +65,10 @@ jobs:
     needs: [build-windows-i686, build-windows-x86_64]
     runs-on: ubuntu-latest
     steps:
-    - name: Download all builds
-      uses: actions/download-artifact@v3
     - name: Clone build repo
       uses: actions/checkout@v3
+    - name: Download all builds
+      uses: actions/download-artifact@v3
     - name: Get latest tag
       id: previoustag
       uses: "WyriHaximus/github-action-get-previous-tag@v1"
