@@ -19,13 +19,14 @@ jobs:
      #   gpg_private_key: ${{secrets.GPG_PRIVATE_KEY}}
       #  passphrase: ${{secrets.GPG_PASS}}
        # git_user_signingkey: true
-    - name: configure git
-      run: |
-        git config user.name "Ethan Reece (GitHub Actions)"
-        git config user.email "136941696+ethanreece-rtechnics@users.noreply.github.com"
+    - uses: fregante/setup-git-user@v2
+    #- name: configure git
+     # run: |
+      #  git config user.name "Ethan Reece (GitHub Actions)"
+       # git config user.email "136941696+ethanreece-rtechnics@users.noreply.github.com"
     - name: Update submodules
       run: |
-        if git commit -S -am"Update submodules (automated)
+        if git commit -am"Update submodules (automated)
 
         $(git submodule --quiet foreach \
           'tag="$(git describe --tags --abbrev=0 origin/HEAD)"
