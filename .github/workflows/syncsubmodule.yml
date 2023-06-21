@@ -1,0 +1,29 @@
+# https://github.com/landfillbaby/png2webp/blob/main/.github/workflows/update-submodules.yml
+name: Update submodule
+on:
+  schedule: [cron: 0 10 * * *]
+  workflow_dispatch:
+jobs:
+  update-submodules:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+      with:
+        submodules: true
+        fetch-depth: 0
+        token: ${{secrets.PUSH_TOKEN}}
+    - name: Update submodules
+      run: |
+        if git commit -S -am"Update submodules (automated)
+
+        $(git submodule --quiet foreach \
+          'tag="$(git describe --tags --abbrev=0 origin/HEAD)"
+          if [ "$(git describe --tags)" != "$tag" ]; then
+            git checkout --quiet "$tag"
+            echo "$name" "$tag"
+          fi')"
+        then
+          git show --raw
+          git push
+        fi
