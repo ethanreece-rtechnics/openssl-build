@@ -67,26 +67,24 @@ jobs:
     steps:
     - name: Clone build repo
       uses: actions/checkout@v3
-    - name: Get latest tag
-      id: previoustag
-      uses: "WyriHaximus/github-action-get-previous-tag@v1"
-      with:
-        fallback: openssl-0.0.0
+    - name: Get current version
+      id: version
+      run: echo "current=$(git describe --tags)" >> "$GITHUB_OUTPUT"
     - name: Download all builds
       uses: actions/download-artifact@v3
     - name: Package builds
       run: |
         ls -R
-        zip -r ${{ steps.previoustag.outputs.tag }}-windows-i686-lib.zip openssl-windows-i686
-        zip -r ${{ steps.previoustag.outputs.tag }}-windows-x86_64-lib.zip openssl-windows-x86_64
-        zip -r -j ${{ steps.previoustag.outputs.tag }}-windows-i686.zip openssl-windows-i686/bin
-        zip -r -j ${{ steps.previoustag.outputs.tag }}-windows-x86_64.zip openssl-windows-x86_64/bin
+        zip -r ${{ steps.version.outputs.current }}-windows-i686-lib.zip openssl-windows-i686
+        zip -r ${{ steps.version.outputs.current }}-windows-x86_64-lib.zip openssl-windows-x86_64
+        zip -r -j ${{ steps.version.outputs.current }}-windows-i686.zip openssl-windows-i686/bin
+        zip -r -j ${{ steps.version.outputs.current }}-windows-x86_64.zip openssl-windows-x86_64/bin
     - name: Create GitHub release with packages
       uses: softprops/action-gh-release@v1
       with:
-        tag_name: ${{ steps.previoustag.outputs.tag }}
+        tag_name: ${{ steps.version.outputs.current }}
         files: |
-          ${{ steps.previoustag.outputs.tag }}-windows-i686-lib.zip
-          ${{ steps.previoustag.outputs.tag }}-windows-x86_64-lib.zip
-          ${{ steps.previoustag.outputs.tag }}-windows-i686.zip
-          ${{ steps.previoustag.outputs.tag }}-windows-x86_64.zip
+          ${{ steps.version.outputs.current }}-windows-i686-lib.zip
+          ${{ steps.version.outputs.current }}-windows-x86_64-lib.zip
+          ${{ steps.version.outputs.current }}-windows-i686.zip
+          ${{ steps.version.outputs.current }}-windows-x86_64.zip
