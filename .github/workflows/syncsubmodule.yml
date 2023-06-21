@@ -1,4 +1,3 @@
-# https://github.com/landfillbaby/png2webp/blob/main/.github/workflows/update-submodules.yml
 name: Update submodule
 on:
   schedule: [cron: 0 10 * * *]
@@ -16,15 +15,15 @@ jobs:
     - uses: fregante/setup-git-user@v2
     - name: Update submodules
       run: |
-        if git commit -am"Update submodules (automated)
-
-        $(git submodule --quiet foreach \
-          'tag="$( git tag | grep ^openssl-[0-9]\d*\.[0-9]\d*\.[0-9]\d*$ | tail -n1)"
-          if [ "$(git describe --tags)" != "$tag" ]; then
-            git checkout --quiet "$tag"
-            echo "$name" "$tag"
-          fi')"
+        cd openssl
+        currenttag=$(git describe --tags)
+        latesttag=$(git tag | grep ^openssl-[0-9]\d*\.[0-9]\d*\.[0-9]\d*$ | tail -n1)
+        if [[ "$currenttag" != "$latesttag ]]
         then
+          git checkout "$latesttag"
+          cd ../
+          git commit -a -m "Update builds to $latesttag"
           git show --raw
+          git tag "$latesttag"
           git push
         fi
