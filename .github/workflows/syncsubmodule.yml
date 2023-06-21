@@ -29,7 +29,7 @@ jobs:
         if git commit -am"Update submodules (automated)
 
         $(git submodule --quiet foreach \
-          'tag="$(git describe --tags --abbrev=0 origin/HEAD)"
+          'tag="$( git tag | grep ^openssl-[0-9]\d*\.[0-9]\d*\.[0-9]\d*$ | tail -n1)"
           if [ "$(git describe --tags)" != "$tag" ]; then
             git checkout --quiet "$tag"
             echo "$name" "$tag"
