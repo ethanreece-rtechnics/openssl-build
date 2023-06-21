@@ -2,20 +2,24 @@ name: Build
 
 on:
   push:
-    branches: [ "master" ]
+    branches: [ "main" ]
 
 jobs:
   build32:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./openssl
     steps:
     - uses: actions/checkout@v3
+      with:
+        submodules: true
     - name: install dependencies
       run: |
         sudo apt update
         sudo apt install mingw-w64 mingw-w64-tools
     - name: make build directory
       run: |
-        cd openssl
         mkdir build
     - name: Configure
       run: ./Configure --cross-compile-prefix=/usr/bin/i686-w64-mingw32- mingw --prefix=$(pwd)/build --openssldir=$(pwd)/build
@@ -27,18 +31,22 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: build32
-        path: build
+        path: openssl/build
   build64:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./openssl
     steps:
     - uses: actions/checkout@v3
+      with:
+        submodules: true
     - name: install dependencies
       run: |
         sudo apt update
         sudo apt install mingw-w64 mingw-w64-tools
     - name: make build directory
       run: |
-        cd openssl
         mkdir build
     - name: Configure
       run: ./Configure --cross-compile-prefix=/usr/bin/x86_64-w64-mingw32- mingw64 --prefix=$(pwd)/build --openssldir=$(pwd)/build
@@ -50,7 +58,7 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: build64
-        path: build
+        path: openssl/build
   release:
     permissions:
       contents: write
