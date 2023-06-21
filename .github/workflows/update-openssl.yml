@@ -27,7 +27,7 @@ jobs:
           git checkout "$latesttag"
           cd ../
           echo "- committing changes"
-          git commit -a -m "Update builds to $latesttag"
+          git commit -a -m "(GitHub Actions) Update builds to $latesttag"
           echo "- creating tag in build repo"
           git tag "$latesttag"
           echo "- pushing submodule update"
