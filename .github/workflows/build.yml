@@ -76,7 +76,7 @@ jobs:
         fallback: openssl-0.0.0
     - name: Package builds
       run: |
-        ls
+        ls -R
         zip -r ${{ steps.previoustag.outputs.tag }}-windows-i686-lib.zip openssl-windows-i686
         zip -r ${{ steps.previoustag.outputs.tag }}-windows-x86_64-lib.zip openssl-windows-x86_64
         zip -r -j ${{ steps.previoustag.outputs.tag }}-windows-i686.zip openssl-windows-i686/bin
