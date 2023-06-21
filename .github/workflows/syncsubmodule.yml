@@ -13,6 +13,7 @@ jobs:
         submodules: true
         fetch-depth: 0
         token: ${{secrets.PUSH_TOKEN}}
+    - uses: fregante/setup-git-user@v2
     - name: Update submodules
       run: |
         if git commit -S -am"Update submodules (automated)
