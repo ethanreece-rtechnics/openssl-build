@@ -31,7 +31,7 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: build32
-        path: build
+        path: openssl/build
   build64:
     runs-on: ubuntu-latest
     defaults:
@@ -58,7 +58,7 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: build64
-        path: build
+        path: openssl/build
   release:
     permissions:
       contents: write
