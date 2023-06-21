@@ -67,6 +67,8 @@ jobs:
     steps:
     - name: Download all builds
       uses: actions/download-artifact@v3
+    - name: List directory
+      run: ls -R
     - name: Clone build repo
       uses: actions/checkout@v3
     - name: Get latest tag
