@@ -25,4 +25,5 @@ jobs:
           git show --raw
           git tag "$latesttag"
           git push
+          git push origin $latesttag
         fi
