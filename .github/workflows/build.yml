@@ -29,7 +29,7 @@ jobs:
     - name: Upload build as artifact
       uses: actions/upload-artifact@v3
       with:
-        name: build-windows-i686
+        name: openssl-windows-i686
         path: openssl/build
   build-windows-x86_64:
     runs-on: ubuntu-latest
@@ -57,7 +57,7 @@ jobs:
     - name: Upload build as artifact
       uses: actions/upload-artifact@v3
       with:
-        name: build-windows-x86_64
+        name: openssl-windows-x86_64
         path: openssl/build
   package:
     permissions:
@@ -76,10 +76,10 @@ jobs:
         fallback: openssl-0.0.0
     - name: Package builds
       run: |
-        zip -r ${{ steps.previoustag.outputs.tag }}-windows-i686-lib.zip build-windows-i686
-        zip -r ${{ steps.previoustag.outputs.tag }}-windows-x86_64-lib.zip build-windows-x86_64
-        zip -r -j ${{ steps.previoustag.outputs.tag }}-windows-i686.zip build-windows-i686/bin
-        zip -r -j ${{ steps.previoustag.outputs.tag }}-windows-x86_64.zip build-windows-x86_64/bin
+        zip -r ${{ steps.previoustag.outputs.tag }}-windows-i686-lib.zip openssl-windows-i686
+        zip -r ${{ steps.previoustag.outputs.tag }}-windows-x86_64-lib.zip openssl-windows-x86_64
+        zip -r -j ${{ steps.previoustag.outputs.tag }}-windows-i686.zip openssl-windows-i686/bin
+        zip -r -j ${{ steps.previoustag.outputs.tag }}-windows-x86_64.zip openssl-windows-x86_64/bin
     - name: Create GitHub release with packages
       uses: softprops/action-gh-release@v1
       with:
