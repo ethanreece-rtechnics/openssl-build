@@ -73,7 +73,7 @@ jobs:
       id: previoustag
       uses: "WyriHaximus/github-action-get-previous-tag@v1"
       with:
-        fallback: 18.18.18
+        fallback: openssl-18.18.18
     - name: Package builds
       run: |
         zip -r ${{ steps.previoustag.outputs.tag }}-windows-i686-lib.zip build-windows-i686
