@@ -67,6 +67,8 @@ jobs:
     steps:
     - name: Clone build repo
       uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
     - name: Get current version
       id: version
       run: echo "current=$(git describe --tags)" >> "$GITHUB_OUTPUT"
