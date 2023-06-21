@@ -18,8 +18,7 @@ jobs:
         cd openssl
         currenttag=$(git describe --tags)
         latesttag=$(git tag | grep ^openssl-[0-9]\d*\.[0-9]\d*\.[0-9]\d*$ | tail -n1)
-        if [[ "$currenttag" != "$latesttag ]]
-        then
+        if [[ "$currenttag" != "$latesttag" ]]; then
           git checkout "$latesttag"
           cd ../
           git commit -a -m "Update builds to $latesttag"
