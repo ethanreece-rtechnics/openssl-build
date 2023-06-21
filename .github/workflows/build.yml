@@ -10,23 +10,23 @@ jobs:
       run:
         working-directory: ./openssl
     steps:
-    - uses: actions/checkout@v3
+    - name: Clone OpenSSL submodule
+      uses: actions/checkout@v3
       with:
         submodules: true
-    - name: install dependencies
+    - name: Install MingW-W64 compiler
       run: |
         sudo apt update
         sudo apt install mingw-w64 mingw-w64-tools
-    - name: make build directory
+    - name: Configure source
       run: |
         mkdir build
-    - name: Configure
-      run: ./Configure --cross-compile-prefix=/usr/bin/i686-w64-mingw32- mingw --prefix=$(pwd)/build --openssldir=$(pwd)/build
-    - name: make
+        ./Configure --cross-compile-prefix=/usr/bin/i686-w64-mingw32- mingw --prefix=$(pwd)/build --openssldir=$(pwd)/build
+    - name: Compile source
       run: make
-    - name: make install
+    - name: Copy build
       run: make install_sw
-    - name: upload build
+    - name: Upload build as artifact
       uses: actions/upload-artifact@v3
       with:
         name: build-windows-i686
@@ -37,23 +37,24 @@ jobs:
       run:
         working-directory: ./openssl
     steps:
-    - uses: actions/checkout@v3
+    - name: Clone OpenSSL submodule
+      uses: actions/checkout@v3
       with:
         submodules: true
-    - name: install dependencies
+    - name: Install MingW-W64 compiler
       run: |
         sudo apt update
         sudo apt install mingw-w64 mingw-w64-tools
     - name: make build directory
       run: |
         mkdir build
-    - name: Configure
+    - name: Configure source
       run: ./Configure --cross-compile-prefix=/usr/bin/x86_64-w64-mingw32- mingw64 --prefix=$(pwd)/build --openssldir=$(pwd)/build
-    - name: make
+    - name: Compile source
       run: make
-    - name: make install
+    - name: Copy build
       run: make install_sw
-    - name: upload build
+    - name: Upload build as artifact
       uses: actions/upload-artifact@v3
       with:
         name: build-windows-x86_64
@@ -64,19 +65,20 @@ jobs:
     needs: [build-windows-i686, build-windows-x86_64]
     runs-on: ubuntu-latest
     steps:
-    - name: Download all workflow run artifacts
+    - name: Download all builds
       uses: actions/download-artifact@v3
-    - uses: actions/checkout@v3
-    - name: 'Get Previous tag'
+    - name: Clone build repo
+      uses: actions/checkout@v3
+    - name: Get latest tag
       id: previoustag
       uses: "WyriHaximus/github-action-get-previous-tag@v1"
-    - name: zip artifacts
+    - name: Package builds
       run: |
         zip -r ${{ steps.previoustag.outputs.tag }}-windows-i686-lib.zip build-windows-i686
         zip -r ${{ steps.previoustag.outputs.tag }}-windows-x86_64-lib.zip build-windows-x86_64
         zip -r -j ${{ steps.previoustag.outputs.tag }}-windows-i686.zip build-windows-i686/bin
         zip -r -j ${{ steps.previoustag.outputs.tag }}-windows-x86_64.zip build-windows-x86_64/bin
-    - name: Release
+    - name: Create GitHub release with packages
       uses: softprops/action-gh-release@v1
       with:
         tag_name: ${{ steps.previoustag.outputs.tag }}
